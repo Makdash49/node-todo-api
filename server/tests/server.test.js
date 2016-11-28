@@ -10,7 +10,9 @@ const todos = [{
   text: 'First test todo'
 }, {
   _id: new ObjectID(),
-  text: 'Second test todo'
+  text: 'Second test todo',
+  completed: true,
+  completedAt: 333
 }];
 
 beforeEach((done) => {
@@ -140,3 +142,40 @@ describe('DELETE /todos/:id', () => {
     .end(done);
   });
 });
+
+
+
+describe('PATCH /todos/:id', () => {
+  it('should update the todo', (done) => {
+    // grab id of first todo item.
+    var hexId = todos[0]._id.toHexString();
+    var update = {
+      text: 'My update for the test',
+      completed: true,
+    };
+
+    request(app)
+      .patch(`/todos/${hexId}`)
+      .send(update)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.text).toBe(update.text);
+        expect(res.body.todo.completed).toBe(update.completed);
+        expect(res.body.todo.completedAt).toBeA('number')
+      })
+      .end(done)
+      });
+    // update text, set completed to true.
+    // assert that you get 200. basic
+    // custom assertion, res body has text property. Text has changed
+    // completed = true, and completeAt is a number.  Use .toBeA
+  });
+
+  // it('should clear completedAt when todo is not completed', (done) => {
+  //   // grab id of second todo item.
+  //   // update text, set completed to false
+  //   // 200
+  //   // text is changed, completed false, completedAt is null. toNotExist
+  //   // run npm test. npm run test-watch?
+  // });
+// });
