@@ -1,12 +1,15 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
 const todos = [{
+  _id: new ObjectID(),
   text: 'First test todo'
 }, {
+  _id: new ObjectID(),
   text: 'Second test todo'
 }];
 
@@ -71,8 +74,37 @@ describe('GET /todos', () => {
   })
 });
 
+describe('GET /todos/:id', () => {
+  it('should return todo doc', (done) => {
+    request(app)
+    .get(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.text).toBe(todos[0].text);
+    })
+    .end(done);
+  })
+  it('should return a 404 if todo not found', (done) => {
+    var hexId = new ObjectID().toHexString();
 
-// empty object.
-// expect 400
-// same format end.
-// Assumpitoin is 0 length of todos.
+    request(app)
+      .get(`/todos/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+  it('should return 404 for non-oject ids', (done) => {
+    request(app)
+    .get('/todos/123')
+    .expect(404)
+    .end(done);
+  });
+});
+
+// first test: make a requiest with real object id.  Call twohexstring method and
+// new object id.
+// Expectation make sure you get a 404 back.
+
+// Second test: invalid id.  Also returns a 404.
+// Pass /todo/123  cannot be converted to object id.
+
+// Does he really mean 404 for both?
