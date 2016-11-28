@@ -100,11 +100,43 @@ describe('GET /todos/:id', () => {
   });
 });
 
-// first test: make a requiest with real object id.  Call twohexstring method and
-// new object id.
-// Expectation make sure you get a 404 back.
+describe('DELETE /todos/:id', () => {
+  it('should remove a todo', (done) => {
+    var hexId = todos[1]._id.toHexString();
 
-// Second test: invalid id.  Also returns a 404.
-// Pass /todo/123  cannot be converted to object id.
+    request(app)
+      .delete(`/todos/${hexId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo._id).toBe(hexId);
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
 
-// Does he really mean 404 for both?
+        // query database using findById
+        // toNotExist assertion:  expet(null).toNoteExist();
+        // use catch clause.
+        Todo.findById(hexId).then((todo) => {
+          expect(todo).toNotExist();
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+  it('should return 404 if todo not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app)
+      .delete(`/todos/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 if object id is invalid', (done) => {
+    request(app)
+    .delete('/todos/123')
+    .expect(404)
+    .end(done);
+  });
+});
