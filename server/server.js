@@ -30,6 +30,35 @@ app.get('/todos', (req, res) => {
   });
 });
 
+// GET /todos/1234324
+app.get('/todos/:id', (req, res) => {
+  var id = req.params.id;
+  Todo.findById(id).then((todo) => {
+    if (!todo) {
+      res.status(404);
+    }
+    res.send({todo});
+  }).catch((e) => res.status(400).send(e));
+});
+
+// validate id with isValid
+// 404 if not valid, response. send back empty.
+
+// findById
+// success
+  // if todo - send it back
+  // if no todo - sned back 404 empty body
+// Error
+  // 400 - and send empty body back
+
+
+// Todo.findById(id).then((todo) => {
+//   if (!todo) {
+//     return console.log('Id not found');
+//   }
+//   console.log('Todo by Id', todo);
+// }).catch((e) => console.log(e));
+
 
 
 app.listen(3000, () => {

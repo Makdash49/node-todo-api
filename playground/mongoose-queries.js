@@ -48,12 +48,3 @@ User.findById('583a3e6c0f6a6bc123128eb0').then((user) => {
   }
   console.log(JSON.stringify(user, undefined, 2));
 }).catch((e) => console.log(e));
-
-// query users collection.  Go into robomongo.  Get id from users collection
-// Load User mongoose model.
-// User.findById to query id from robo.
-// 3 cases.
-// No user.  "User not found"
-// User found.  Print user to screen.
-// Finally, handle errors.  Print error object.
-// Not need for is valid.  Fill out find by id call.
