@@ -69,17 +69,6 @@ UserSchema.statics.findByToken = function (token) {
   });
 };
 
-// bcrypt.genSalt(10, (err, salt) => {
-//   bcrypt.hash(password, salt, (err, hash) => {
-//     console.log(hash);
-//   })
-// });
-
-
-
-
-
-
 UserSchema.pre('save', function (next) {
   var user = this;
 
