@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 var UserSchema = new mongoose.Schema({
   email: {
@@ -67,6 +68,42 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
   });
 };
+
+// bcrypt.genSalt(10, (err, salt) => {
+//   bcrypt.hash(password, salt, (err, hash) => {
+//     console.log(hash);
+//   })
+// });
+
+
+
+
+
+
+UserSchema.pre('save', function (next) {
+  var user = this;
+
+  if (user.isModified('password')) {
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        user.password = hash;
+        next();
+      })
+    });
+
+
+    // user.password
+
+    // set it on user.password will equal hash value.
+    // Then call next to complete middleware
+    // Gensalt function  Hash function.  Add these two statements.
+    // Sign up a new user in postman and get 200.  in Robomongo.  See hashed password.
+    // Wipe database first because old users with regular passwords.
+
+  } else {
+    next();
+  }
+});
 
 var User = mongoose.model('User', UserSchema);
 
