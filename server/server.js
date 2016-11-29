@@ -96,42 +96,18 @@ app.patch('/todos/:id', (req, res) => {
   })
 });
 
-// Post /users
-// similar to new todo route.  New instance then save.
-// Go well, return doc, or return the error.
-// Also use pick to pull off properties.  Like patch method.
-// Just email and password.  Use body variable to pass into instructor function
-
-
-// Shut down server.  Wipe database. Restart server.
-
-
-// app.post('/todos', (req, res) => {
-//   console.log(req.body);
-//   var todo = new Todo({
-//     text: req.body.text
-//   });
-//
-//   todo.save().then((doc) => {
-//     res.send(doc);
-//   }, (e) => {
-//     res.status(400).send(e);
-//   });
-// });
-
+// POST /users
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
 
-  var user = new User({
-    email: body.email,
-    password: body.password
-  });
-
-  user.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e)
-  });
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  })
 });
 
 
