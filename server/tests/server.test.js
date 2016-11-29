@@ -126,7 +126,6 @@ describe('DELETE /todos/:id', () => {
       }).catch((e) => done(e));
     });
   });
-
   it('should return 404 if todo not found', (done) => {
     var hexId = new ObjectID().toHexString();
 
@@ -135,7 +134,6 @@ describe('DELETE /todos/:id', () => {
       .expect(404)
       .end(done);
   });
-
   it('should return 404 if object id is invalid', (done) => {
     request(app)
     .delete('/todos/123')
@@ -144,52 +142,39 @@ describe('DELETE /todos/:id', () => {
   });
 });
 
-
-
 describe('PATCH /todos/:id', () => {
   it('should update the todo', (done) => {
-    // grab id of first todo item.
     var hexId = todos[0]._id.toHexString();
-    var update = {
-      text: 'My update for the test',
-      completed: true,
-  };
+    var text = 'This should be the next text';
 
     request(app)
       .patch(`/todos/${hexId}`)
-      .send(update)
+      .send({
+        completed: true,
+        text
+      })
       .expect(200)
       .expect((res) => {
-        expect(res.body.todo.text).toBe(update.text);
-        expect(res.body.todo.completed).toBe(update.completed);
+        expect(res.body.todo.text).toBe(text);
+        expect(res.body.todo.completed).toBe(true);
         expect(res.body.todo.completedAt).toBeA('number')
       })
       .end(done)
   });
 
-    // update text, set completed to true.
-    // assert that you get 200. basic
-    // custom assertion, res body has text property. Text has changed
-    // completed = true, and completeAt is a number.  Use .toBeA
-
     it('should clear completedAt when todo is not completed', (done) => {
-    // grab id of second todo item.
-    // update text, set completed to false
-    // 200
-    // text is changed, completed false, completedAt is null. toNotExist
-    // run npm test. npm run test-watch?
     var hexId = todos[1]._id.toHexString();
-    var update = {
-      text: 'My second update for the test',
-      completed: false
-    };
+    var text = 'This should be the next text!!';
 
     request(app)
       .patch(`/todos/${hexId}`)
-      .send(update)
+      .send({
+        completed: false,
+        text
+      })
       .expect(200)
       .expect((res) => {
-        expect(res.body.todo.text).toBe(update.text);
+        expect(res.body.todo.text).toBe(text);
         expect(res.body.todo.completed).toBe(false);
         expect(res.body.todo.completedAt).toNotExist();
       })
