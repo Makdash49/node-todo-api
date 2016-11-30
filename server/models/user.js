@@ -76,7 +76,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
     if (!user) {
       return Promise.reject();
     }
-    console.log(user);
+
     return new Promise((resolve, reject) => {
 
       bcrypt.compare(password, user.password, (err, res) => {
