@@ -126,14 +126,14 @@ app.post('/users/login', (req, res) => {
     res.status(400).send()
   });
 });
-// Make a post request, send data, email also plain text password.
-// Find a user in collection matching email. And hashed password equals plain text when
-// using bycrypt compare. line 15 in hashing.
 
-// set up route.  pick off email and password.
-// respond with res.send back the body data.
-// make the log in call in postman.  Make sure you get the email and password back.
-
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  });
+});
 
 app.listen(port, () => {
   console.log(`Started on port ${port}`);

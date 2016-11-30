@@ -294,8 +294,5 @@ describe('POST /users/login', () => {
           done();
         }).catch((e) => done(e));
       });
-    // change invalid password, tweek assertions.  400 x-atth to not exist
-    // users toekens array length 0
-    // Copy test above, tweak, rerun.  see if it passes.
   });
 })
